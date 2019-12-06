@@ -5,6 +5,7 @@
       height:areaHeight+'px',
       left:areaLeft+'px',
       top:areaTop+'px',}"></div>
+  
 </div>
 </template>
 <script>
@@ -23,7 +24,7 @@ export default{
       areaHeight:200,
       areaLeft:0,
       areaTop:0,
-      areaShow:false
+      areaShow:false,
     }
   },
   methods:{
@@ -40,21 +41,26 @@ export default{
     end(e){
       this.clickEnd.x = e.clientX
       this.clickEnd.y = e.clientY
-      this.areaWidth = this.clickEnd.x - this.clickStart.x
-      this.areaHeight = this.clickEnd.y - this.clickStart.y
-      this.areaLeft = this.clickStart.x
-      this.areaTop = this.clickStart.y
+      let deltaX = this.clickEnd.x - this.clickStart.x
+      let deltaY = this.clickEnd.y - this.clickStart.y
+      this.areaWidth = deltaX
+      this.areaHeight = deltaY
+      
+      if(deltaX<50 && deltaY<50){
+        return 
+      }
+      let left = this.clickStart.x
+      let top = this.clickStart.y
+      this.areaLeft = left
+      this.areaTop = top
       this.areaShow = true;
-      this.$nextTick(()=>{
-        html2canvas(document.getElementById('shotArea'))
-        .then(canvas => {
-          console.log(canvas);
-          
-            document.body.appendChild(canvas)
-        })
-      })
+      
     },
+  },
+  mounted(){
+    
   }
+
 }
 </script>
 <style lang="scss" scoped>
@@ -65,20 +71,35 @@ export default{
     height: 100vh;
     top: 0;
     left: 0;
-    box-shadow: 0px 0px 10px 8px rgb(163, 163, 163) inset;
-    // background-color: rgba($color: #000000, $alpha: .7);
+    // box-shadow: 0px 0px 10px 8px rgb(163, 163, 163) inset;
+    background-color: rgba($color: #000000, $alpha: .7);
     .tool{
       position: absolute;
-      width: 100vw;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
       top: 0;
-      left: 0;
+      left: 48vw;
       text-align:center;
       font-size: 50px;
       color: #fff;
+      background: rgb(61, 61, 61);
+      border-radius: 50%;
+    }
+    .tool:hover{
+      cursor: pointer;
+      background: rgb(41, 41, 41);
     }
     .area{
       position: absolute;
       border: 2px solid #3960e0;
+    }
+    #can{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: #fff;
     }
   }
 </style>
